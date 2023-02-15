@@ -1,0 +1,30 @@
+{
+    "name": "fakecop/wykop-client",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "FakeCop\\WykopClient\\": "src/",
+            "FakeCop\\WykopClient\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "FakeCop\\WykopClient\\WykopClientServiceProvider"
+            ],
+            "aliases": {
+                "WykopClient": "FakeCop\\WykopClient\\Facades\\WykopClient"
+            }
+        }
+    },
+    "authors": [
+        {
+            "name": "jpedryc",
+            "email": "jan.pedryc@gmail.com"
+        }
+    ],
+    "require": {
+        "spatie/laravel-data": "^3.1",
+        "spatie/enum": "^3.13"
+    }
+}
