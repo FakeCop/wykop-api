@@ -1,12 +1,14 @@
-# WYKOP API CLIENT (V3)
-### Laravel package
+## 🔌 Wykop API Client (V3)
+###### Laravel package
+
+ [Wykop API (V3) Swagger Documentation](https://doc.wykop.pl/)
 
 # 🏗️
-#### ⚠️⚠️⚠️ This Client is still WIP ⚠️⚠️⚠
+### ⚠️⚠️⚠️ This Client is still WIP ⚠️⚠️⚠
 
 ---  
 
-## ️Methods
+### ️Methods
 
 `use FakeCop\WykopClient\Facades\WykopClient`
 
@@ -22,11 +24,13 @@ static array getProfileUserLinksDown(string $username, int $page)
 static array getProfileUserLinksCommented(string $username, int $page)
 static array getProfileUserObservedUsersFollowing(string $username, int $page)
 static array getProfileUserObservedUsersFollowers(string $username, int $page)
-```
+```  
 
-## DTOs
+ ... TBC 🏗️
 
-### FakeCop\WykopClient\DataTransferObjects\Profile\Profile
+### DTOs
+
+###### FakeCop\WykopClient\DataTransferObjects\Profile\Profile
 ```PHP
 string $username,
 bool $company,
@@ -52,4 +56,6 @@ FakeCop\WykopClient\DataTransferObjects\Profile\Summary $summary,
 FakeCop\WykopClient\DataTransferObjects\Profile\SocialMedia $social_media,
 FakeCop\WykopClient\DataTransferObjects\Profile\Banned $banned,
 bool $can_change_gender,
-```
+```  
+
+... TBC 🏗️
