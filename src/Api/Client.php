@@ -9,6 +9,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Utils;
 use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\MessageInterface;
@@ -21,17 +22,19 @@ class Client
 
     public static GuzzleClient $client;
 
-    public static string $accessToken;
+    public string $accessToken;
 
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function __construct()
     {
-        $this->initClient();
-        $this->refreshClientAccessToken();
-    }
+        self::$client = new GuzzleClient([
+            'base_uri' => config('wykop-client.api_url').'/',
+            'handler' => $this->getClientStack(),
+        ]);
 
-    private function initClient(): void
-    {
-        self::$client = new GuzzleClient(['handler' => $this->getClientStack()]);
+        $this->refreshClientAccessToken();
     }
 
     /**
@@ -63,10 +66,7 @@ class Client
 
         // Auth Middleware - to append auth token automatically
         $authMiddleware = Middleware::mapRequest(fn(Request $request
-        ): MessageInterface => isset(self::$accessToken)
-            ? $request->withHeader('Authorization', 'Bearer '.$this->getClientAccessToken())
-            : $request
-        );
+        ): MessageInterface => isset($this->accessToken) ? $request->withHeader('Authorization', 'Bearer '.$this->accessToken) : $request);
 
         $stack->setHandler(Utils::chooseHandler());
         $stack->push($retryMiddleware);
@@ -75,19 +75,53 @@ class Client
         return $stack;
     }
 
+    /**
+     * @return void
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     private function refreshClientAccessToken(): void
     {
-        if (! isset(self::$accessToken)) {
-            self::$accessToken = 'abc';
-        }
+        $this->accessToken = ! isset($this->accessToken) ? $this->getInitialAuthToken() : $this->getRefreshAuthToken();
     }
 
     /**
      * @return string
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function getClientAccessToken(): string
+    private function getInitialAuthToken(): string
     {
-        return 'abc';
+        $response = self::$client->post('auth', [
+                'json' => [
+                    'data' => [
+                        'key' => config('wykop-client.key'),
+                        'secret' => config('wykop-client.secret'),
+                    ],
+                ],
+            ]);
+
+        $contents = json_decode($response->getBody()->getContents(), true);
+
+        return $contents['data']['token'];
+    }
+
+    /**
+     * @return string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function getRefreshAuthToken(): string
+    {
+        $response = self::$client->post('auth', [
+            'json' => [
+                'data' => [
+                    'refresh_token' => config('wykop-client.key'),
+                    'secret' => config('wykop-client.secret'),
+                ]
+            ]
+            ]);
+
+        $contents = json_decode($response->getBody()->getContents(), true);
+
+        return $contents['data']['token'];
     }
 
     /**
@@ -96,7 +130,7 @@ class Client
      * @param array $headers
      * @return array|null
      */
-    public static function get(string $path, array $params = [], array $headers = []): ?array
+    public function get(string $path, array $params = [], array $headers = []): ?array
     {
         try {
             $response = self::$client->get($path, [

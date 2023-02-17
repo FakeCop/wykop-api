@@ -10,6 +10,6 @@ trait ApiUrlPathTrait
      */
     public static function profilePath(string $username): string
     {
-        return "/profile/users/$username";
+        return "profile/users/$username";
     }
 }
