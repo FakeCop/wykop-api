@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+
+  app:
+    build:
+      args:
+        user: ${USER}
+        uid: ${UID}
+      context: ./docker/app
+      dockerfile: Dockerfile
+    image: wykop-client
+    container_name: wykop-client-app
+    user: ${USER}:${GROUP}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    working_dir: /var/www/
+    expose:
+      - 9000
+    volumes:
+      - ./:/var/www
+      - ./docker/app/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./docker/app/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./docker/app/php/conf.d/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - wykop-client_network
+
+  db:
+    image: mariadb:10.6.3
+    container_name: wykop-client-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICES_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/db:/docker-entrypoint-initdb.d
+      - wykop-client_data:/var/lib/mysql
+    networks:
+      - wykop-client_network
+
+volumes:
+  wykop-client_data:
+
+networks:
+  wykop-client_network:
+    driver: bridge
