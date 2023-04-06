@@ -29,5 +29,9 @@
     <php>
         <env name="DB_CONNECTION" value="testing"/>
         <env name="APP_KEY" value="base64:2fl+Ktvkfl+Fuz4Qp/A75G2RTiWVA/ZoKZvp6fiiM10="/>
+        <env name="WYKOP_API_URL" value=""/>
+        <env name="WYKOP_APP_NAME" value=""/>
+        <env name="WYKOP_KEY" value=""/>
+        <env name="WYKOP_SECRET" value=""/>
     </php>
 </phpunit>

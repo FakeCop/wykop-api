@@ -9,7 +9,6 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Utils;
 use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\MessageInterface;

@@ -3,6 +3,9 @@
 namespace FakeCop\WykopClient;
 
 use FakeCop\WykopClient\Api\Client as ApiClient;
+use FakeCop\WykopClient\DataTransferObjects\LinkSort;
+use FakeCop\WykopClient\DataTransferObjects\LinkType;
+use FakeCop\WykopClient\DataTransferObjects\UpvoteType;
 use FakeCop\WykopClient\Traits\ApiUrlPathTrait;
 
 class WykopClient
@@ -14,6 +17,47 @@ class WykopClient
     public function __construct()
     {
         self::$apiClient = new ApiClient();
+    }
+
+    /**
+     * @param int $page
+     * @param \FakeCop\WykopClient\DataTransferObjects\LinkSort|null $sort
+     * @param \FakeCop\WykopClient\DataTransferObjects\LinkType|null $type
+     * @param string|null $category
+     * @param string|null $bucket
+     * @return array
+     */
+    public function getLinks(
+        int $page = 1,
+        ?LinkSort $sort = null,
+        ?LinkType $type = null,
+        ?string $category = null,
+        ?string $bucket = null,
+    ): array
+    {
+        return self::$apiClient->get('/links');
+    }
+
+    /**
+     * @param int $linkId
+     * @return array
+     */
+    public function getLinkDetails(int $linkId): array
+    {
+        return self::$apiClient->get("/links/{$linkId}");
+    }
+
+    /**
+     * @param int $linkId
+     * @param \FakeCop\WykopClient\DataTransferObjects\UpvoteType $upvoteType
+     * @return array|null
+     */
+    public function getLinkUpvotes(
+        int $linkId,
+        UpvoteType $upvoteType
+    )
+    {
+        return self::$apiClient->get("/links/{$linkId}/upvotes/{$upvoteType}");
     }
 
     /**
