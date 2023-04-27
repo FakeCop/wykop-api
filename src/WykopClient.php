@@ -4,11 +4,19 @@ namespace FakeCop\WykopClient;
 
 use Exception;
 use FakeCop\WykopClient\Api\Requests\AuthRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileActionsRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileEntriesAddedRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileEntriesCommentedRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileEntriesVotedRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileLinksAddedRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileLinksCommentedRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileLinksDownRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileLinksPublishedRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileLinksUpRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileShortRequest;
 use Illuminate\Support\Facades\Session;
 use Saloon\Exceptions\Request\FatalRequestException;
-use Saloon\Exceptions\Request\RequestException;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
 use Saloon\Exceptions\Request\Statuses\RequestTimeOutException;
@@ -110,5 +118,86 @@ class WykopClient
     public function getProfileShort(string $username): array
     {
         return $this->sendConnectorAction(new ProfileShortRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileActions(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileActionsRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileEntriesAdded(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileEntriesAddedRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileEntriesVoted(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileEntriesVotedRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileEntriesCommented(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileEntriesCommentedRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileLinksAdded(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileLinksAddedRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileLinksPublished(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileLinksPublishedRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileLinksUp(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileLinksUpRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileLinksDown(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileLinksDownRequest($username));
+    }
+
+    /**
+     * @param string $username
+     * @return array
+     */
+    public function getProfileLinksCommented(string $username): array
+    {
+        return $this->sendConnectorAction(new ProfileLinksCommentedRequest($username));
     }
 }

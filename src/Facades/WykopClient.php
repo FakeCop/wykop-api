@@ -5,17 +5,17 @@ namespace FakeCop\WykopClient\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static array getProfileUser(string $username)
- * @method static array getProfileUserShort(string $username)
- * @method static array getProfileUserActions(string $username, int $page)
- * @method static array getProfileUserEntriesVoted(string $username, int $page)
- * @method static array getProfileUserLinksAdded(string $username, int $page)
- * @method static array getProfileUserLinksPublished(string $username, int $page)
- * @method static array getProfileUserLinksUp(string $username, int $page)
- * @method static array getProfileUserLinksDown(string $username, int $page)
- * @method static array getProfileUserLinksCommented(string $username, int $page)
- * @method static array getProfileUserObservedUsersFollowing(string $username, int $page)
- * @method static array getProfileUserObservedUsersFollowers(string $username, int $page)
+ * @method static array getProfile(string $username)
+ * @method static array getProfileShort(string $username)
+ * @method static array getProfileActions(string $username)
+ * @method static array getProfileEntriesAdded(string $username)
+ * @method static array getProfileEntriesVoted(string $username)
+ * @method static array getProfileEntriesCommented(string $username)
+ * @method static array getProfileLinksAdded(string $username)
+ * @method static array getProfileLinksPublished(string $username)
+ * @method static array getProfileLinksUp(string $username)
+ * @method static array getProfileLinksDown(string $username)
+ * @method static array getProfileLinksCommented(string $username)
  */
 class WykopClient extends Facade
 {
