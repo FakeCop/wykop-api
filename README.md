@@ -8,13 +8,13 @@
 
 ---  
 
-### 🚀 Fast-track
+# 🚀 Fast-track
 
-#### Download
+## Download
 
 `composer require fakecop/wykop-client`
 
-#### Install
+## Install
 
 `php artisan wykop-client:install`
 
@@ -24,14 +24,14 @@
 * **No models**
 * **No resources**
 
-#### Set up environmental variables
+## Set up environmental variables
 
 ```dotenv
 WYKOP_API_URL=https://wykop.pl/api/v3
 WYKOP_KEY=w123xxxxxxx
 WYKOP_SECRET=98a7sd9a8sdxxxxxxxxxxxxxxxxxxx
 ```
-#### Have fun!
+## Have fun!
 
 | `WykopClient` facade available |
 |---------------------------------------------------------------------------------------------|
@@ -58,9 +58,9 @@ array:1 [
     ...
 ```
 
-### 📜 Available actions
+# 📜 Available actions
 
-#### Profile actions
+## Profile actions
 
 ```PHP
 static array getProfile(string $username)  
