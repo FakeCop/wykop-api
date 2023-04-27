@@ -14,9 +14,6 @@
 
 `composer require fakecop/wykop-client`
 
-| If you get an error about versioning, use `composer require fakecop/wykop-client:dev-master`. |
-|-----------------------------------------------------------------------------------------------|
-
 #### Install
 
 `php artisan wykop-client:install`
