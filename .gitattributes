@@ -5,3 +5,4 @@ index.php export-ignore
 phpunit.xml.dist export-ignore
 README.md export-ignore
 tests/ export-ignore
+wykop-logo.svg export-ignore

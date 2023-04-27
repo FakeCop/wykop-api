@@ -1,5 +1,8 @@
-## 🔌 Wykop API Client (V3)
-###### Laravel package
+<h3>
+    <img src="wykop-logo.svg" style="margin-right: 8px;" width="150px" alt="wykop.pl"/> <span style="color: #222222;">API Client (V3)</span>
+</h3>
+
+###### 🔌 Laravel package
 
  [Wykop API (V3) Swagger Documentation](https://doc.wykop.pl/)
 
