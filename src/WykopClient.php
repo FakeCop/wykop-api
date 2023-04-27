@@ -2,179 +2,113 @@
 
 namespace FakeCop\WykopClient;
 
-use FakeCop\WykopClient\Api\Client as ApiClient;
-use FakeCop\WykopClient\DataTransferObjects\LinkSort;
-use FakeCop\WykopClient\DataTransferObjects\LinkType;
-use FakeCop\WykopClient\DataTransferObjects\UpvoteType;
-use FakeCop\WykopClient\Traits\ApiUrlPathTrait;
+use Exception;
+use FakeCop\WykopClient\Api\Requests\AuthRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileRequest;
+use FakeCop\WykopClient\Api\Requests\Profile\ProfileShortRequest;
+use Illuminate\Support\Facades\Session;
+use Saloon\Exceptions\Request\FatalRequestException;
+use Saloon\Exceptions\Request\RequestException;
+use Saloon\Exceptions\Request\Statuses\ForbiddenException;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
+use Saloon\Exceptions\Request\Statuses\RequestTimeOutException;
+use Saloon\Exceptions\Request\Statuses\TooManyRequestsException;
+use Saloon\Exceptions\Request\Statuses\UnauthorizedException;
+use Saloon\Exceptions\Request\Statuses\UnprocessableEntityException;
+use Saloon\Http\Connector;
+use Saloon\Http\Request;
 
 class WykopClient
 {
-    use ApiUrlPathTrait;
-
-    private static ApiClient $apiClient;
+    private static Connector $connector;
     
     public function __construct()
     {
-        self::$apiClient = new ApiClient();
+        $this->initConnector();
+    }
+
+    private function initConnector(): void
+    {
+        if (!Session::has('wykopAccessToken')) {
+            $this->refreshAccessToken();
+        }
+
+        self::$connector = new Api\Connector(Session::get('wykopAccessToken'));
+    }
+
+    private function refreshAccessToken(): void
+    {
+        $request = new AuthRequest;
+        $request->body()->merge([
+            'data' => [
+                'key' => config('wykop-client.key'),
+                'secret' => config('wykop-client.secret'),
+            ]
+        ]);
+
+        try {
+            $jsonBody = $request->send()->json();
+            Session::put('wykopAccessToken', $jsonBody['data']['token']);
+        }
+        catch (Exception $exception) {
+            // @TODO
+        }
     }
 
     /**
-     * @param int $page
-     * @param \FakeCop\WykopClient\DataTransferObjects\LinkSort|null $sort
-     * @param \FakeCop\WykopClient\DataTransferObjects\LinkType|null $type
-     * @param string|null $category
-     * @param string|null $bucket
+     * @param \Saloon\Http\Request $request
      * @return array
      */
-    public function getLinks(
-        int $page = 1,
-        ?LinkSort $sort = null,
-        ?LinkType $type = null,
-        ?string $category = null,
-        ?string $bucket = null,
-    ): array
+    private function sendConnectorAction(Request $request): array
     {
-        return self::$apiClient->get('/links');
-    }
+        try {
+            $response = self::$connector->send($request);
 
-    /**
-     * @param int $linkId
-     * @return array
-     */
-    public function getLinkDetails(int $linkId): array
-    {
-        return self::$apiClient->get("/links/{$linkId}");
-    }
+            return $response->json();
+        }
+        catch (UnauthorizedException $exception) { // 401
 
-    /**
-     * @param int $linkId
-     * @param \FakeCop\WykopClient\DataTransferObjects\UpvoteType $upvoteType
-     * @return array|null
-     */
-    public function getLinkUpvotes(
-        int $linkId,
-        UpvoteType $upvoteType
-    )
-    {
-        return self::$apiClient->get("/links/{$linkId}/upvotes/{$upvoteType}");
+        }
+        catch (ForbiddenException $exception) { // 403
+            // @TODO reauthenticate
+        }
+        catch (NotFoundException $exception) { // 404
+
+        }
+        catch (RequestTimeOutException $exception) { // 408
+
+        }
+        catch (UnprocessableEntityException $exception) { // 422
+
+        }
+        catch (TooManyRequestsException $exception) { // 429
+
+        }
+        catch (FatalRequestException $exception) {
+
+        }
+        catch (Exception $exception) {
+            return [];
+        }
+
+        return [];
     }
 
     /**
      * @param string $username
      * @return array
      */
-    public function getProfileUser(string $username): array
+    public function getProfile(string $username): array
     {
-        return self::$apiClient->get(self::profilePath($username));
+        return $this->sendConnectorAction(new ProfileRequest($username));
     }
 
     /**
      * @param string $username
      * @return array
      */
-    public function getProfileUserShort(string $username): array
+    public function getProfileShort(string $username): array
     {
-        return self::$apiClient->get(self::profilePath($username) . '/short');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserActions(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/actions');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserEntriesAdded(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/entries/added');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserEntriesVoted(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/entries/commented');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserLinksAdded(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/links/added');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserLinksPublished(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/links/published');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserLinksUp(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/links/up');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserLinksDown(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/links/down');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserLinksCommented(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/links/commented');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserObservedUsersFollowing(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/observed/users/following');
-    }
-
-    /**
-     * @param string $username
-     * @param int $page
-     * @return array
-     */
-    public function getProfileUserObservedUsersFollowers(string $username, int $page = 1): array
-    {
-        return self::$apiClient->get(self::profilePath($username) . '/observed/users/followers');
+        return $this->sendConnectorAction(new ProfileShortRequest($username));
     }
 }

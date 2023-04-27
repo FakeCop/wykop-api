@@ -8,10 +8,11 @@ class TestCase extends \Orchestra\Testbench\TestCase
 {
     public function setUp(): void
     {
+        parent::setUp();
         //$this->loadLaravelMigrations(['--database' => 'testbench']);
         //$this->artisan('migrate', ['--database' => 'testbench'])->run();
 
-        parent::setUp();
+        $this->artisan('wykop-client:install')->run();
     }
 
     /**

@@ -2,31 +2,28 @@
 
 namespace FakeCop\WykopClient;
 
-use FakeCop\WykopClient\Console\InstallWykopClient;
-use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class WykopClientServiceProvider extends ServiceProvider
+class WykopClientServiceProvider extends PackageServiceProvider
 {
-    public function register()
+    public function configurePackage(Package $package): void
     {
-        $this->app->bind('wykop_client', function ($app) {
-            return new WykopClient();
-        });
-
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'wykop-client');
+        $package->name('wykop-client')
+            ->hasConfigFile()
+            ->hasInstallCommand(function (InstallCommand $command) {
+                $command->publishConfigFile()
+                    ->copyAndRegisterServiceProviderInApp();
+            });
     }
 
-    public function boot()
+    public function register()
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                InstallWykopClient::class,
-            ]);
+        parent::register();
 
-            $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('wykop-client.php'),
-
-            ], 'config');
-        }
+        $this->app->bind('wykop_client', function () {
+            return new WykopClient();
+        });
     }
 }

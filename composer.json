@@ -30,7 +30,9 @@
     "require": {
         "spatie/laravel-data": "^3.1",
         "spatie/enum": "^3.13",
-        "guzzlehttp/guzzle": "^7.5"
+        "guzzlehttp/guzzle": "^7.5",
+        "sammyjo20/saloon": "^2.0",
+        "sammyjo20/saloon-laravel": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0",

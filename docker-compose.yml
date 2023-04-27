@@ -45,6 +45,19 @@ services:
     networks:
       - wykop-client_network
 
+  server:
+    image: nginx:1.8-alpine
+    container_name: wykop-client-server
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/server/conf.d:/etc/nginx/conf.d
+    networks:
+      - wykop-client_network
+    
 volumes:
   wykop-client_data:
 
