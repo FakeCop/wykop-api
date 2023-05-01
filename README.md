@@ -89,28 +89,44 @@ static array getProfileLinksCommented(string $username)
 ## 🔗 Link actions
 
 ```PHP
- static array getLinkList(int $page = 1, int $limit = 25, ?Sort $sort = null, ?LinkType $type = null, ?string $category = null, ?string $bucket = null) 
+static array getLinkList(int $page = 1, int $limit = 25, ?Sort $sort = null, ?LinkType $type = null, ?string $category = null, ?string $bucket = null) 
 
- static array getLinkUrl(string $url) 
+static array getLinkUrl(string $url) 
 
- static array getLink(int $linkId) 
+static array getLink(int $linkId) 
 
- static array getLinkUpVotes(int $linkId, ActionType $type) 
+static array getLinkUpVotes(int $linkId, ActionType $type) 
 
- static array getLinkRedirect(int $linkId)
+static array getLinkRedirect(int $linkId)
+
+static array getLinkCommentList(int $linkId, int $page = 1, int $limit = 25, ?CommentSort $sort = null, bool $ama = false)
+
+static array getLinkComment(int $linkId, int $commentId)
+
+static array getLinkCommentComments(int $linkId, int $commentId, int $page = 1)
 ```
 
 # 🚧 Available Enums
 
-## Sort
+## LinkSort
 
 ```PHP
-use FakeCop\WykopClient\Api\Requests\Contracts\Sort;
+use FakeCop\WykopClient\Api\Requests\Contracts\LinkSort;
 
-Sort::NEWEST;		    //	'newest'
-Sort::ACTIVE;		    //	'active'
-Sort::COMMENTED;	    //	'commented'
-Sort::DIGGED;		    //	'digged'
+LinkSort::NEWEST;		    //	'newest'
+LinkSort::ACTIVE;		    //	'active'
+LinkSort::COMMENTED;	    //	'commented'
+LinkSort::DIGGED;		    //	'digged'
+```
+
+## CommentSort
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\CommentSort;
+
+CommentSort::NEWEST;		//  'newest'
+CommentSort::OLDEST;		//	'oldest'
+CommentSort::BEST;	        //	'best'
 ```
 
 ## LinkType

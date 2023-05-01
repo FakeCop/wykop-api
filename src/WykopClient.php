@@ -5,10 +5,15 @@ namespace FakeCop\WykopClient;
 use Exception;
 use FakeCop\WykopClient\Api\Requests\AuthRequest;
 use FakeCop\WykopClient\Api\Requests\Contracts\ActionType;
+use FakeCop\WykopClient\Api\Requests\Contracts\CommentSort;
 use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
-use FakeCop\WykopClient\Api\Requests\Contracts\Sort;
+use FakeCop\WykopClient\Api\Requests\Contracts\LinkSort;
+use FakeCop\WykopClient\Api\Requests\Link\LinkCommentCommentsRequest;
+use FakeCop\WykopClient\Api\Requests\Link\LinkCommentListRequest;
+use FakeCop\WykopClient\Api\Requests\Link\LinkCommentRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkListRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkRedirectRequest;
+use FakeCop\WykopClient\Api\Requests\Link\LinkRelatedRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkUpVotesRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkUrlRequest;
@@ -212,7 +217,7 @@ class WykopClient
     /**
      * @param int $page
      * @param int $limit
-     * @param \FakeCop\WykopClient\Api\Requests\Contracts\Sort|null $sort
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\LinkSort|null $sort
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\LinkType|null $type
      * @param string|null $category
      * @param string|null $bucket
@@ -221,7 +226,7 @@ class WykopClient
     public function getLinkList(
         int $page = 1,
         int $limit = 25,
-        ?Sort $sort = null,
+        ?LinkSort $sort = null,
         ?LinkType $type = null,
         ?string $category = null,
         ?string $bucket = null
@@ -265,5 +270,54 @@ class WykopClient
     public function getLinkRedirect(int $linkId): array
     {
         return $this->sendConnectorAction(new LinkRedirectRequest($linkId));
+    }
+
+    /**
+     * @param int $linkId
+     * @return array
+     */
+    public function getLinkRelated(int $linkId): array
+    {
+        return $this->sendConnectorAction(new LinkRelatedRequest($linkId));
+    }
+
+    /**
+     * @param int $linkId
+     * @param int $page
+     * @param int $limit
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\CommentSort|null $sort
+     * @param bool $ama
+     * @return array
+     */
+    public function getLinkCommentList(
+        int $linkId,
+        int $page = 1,
+        int $limit = 25,
+        ?CommentSort $sort = null,
+        bool $ama = false,
+    ): array
+    {
+        return $this->sendConnectorAction(new LinkCommentListRequest($linkId, $page, $limit, $sort, $ama));
+    }
+
+    /**
+     * @param int $linkId
+     * @param int $commentId
+     * @return array
+     */
+    public function getLinkComment(int $linkId, int $commentId): array
+    {
+        return $this->sendConnectorAction(new LinkCommentRequest($linkId, $commentId));
+    }
+
+    /**
+     * @param int $linkId
+     * @param int $commentId
+     * @param int $page
+     * @return array
+     */
+    public function getLinkCommentComments(int $linkId, int $commentId, int $page = 1): array
+    {
+        return $this->sendConnectorAction(new LinkCommentCommentsRequest($linkId, $commentId, $page));
     }
 }

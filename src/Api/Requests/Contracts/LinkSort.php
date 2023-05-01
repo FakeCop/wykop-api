@@ -2,7 +2,7 @@
 
 namespace FakeCop\WykopClient\Api\Requests\Contracts;
 
-enum Sort: string
+enum LinkSort: string
 {
     case NEWEST = 'newest';
     case ACTIVE = 'active';

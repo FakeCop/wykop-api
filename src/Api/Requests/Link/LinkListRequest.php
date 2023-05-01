@@ -3,7 +3,7 @@
 namespace FakeCop\WykopClient\Api\Requests\Link;
 
 use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
-use FakeCop\WykopClient\Api\Requests\Contracts\Sort;
+use FakeCop\WykopClient\Api\Requests\Contracts\LinkSort;
 
 class LinkListRequest extends LinkBasedRequest
 {
@@ -11,7 +11,7 @@ class LinkListRequest extends LinkBasedRequest
 
     protected int $limit = 25;
 
-    protected ?Sort $sort;
+    protected ?LinkSort $sort;
 
     protected ?LinkType $type;
 
@@ -22,7 +22,7 @@ class LinkListRequest extends LinkBasedRequest
     public function __construct(
         int $page = 1,
         int $limit = 25,
-        ?Sort $sort = null,
+        ?LinkSort $sort = null,
         ?LinkType $type = null,
         ?string $category = null,
         ?string $bucket = null
