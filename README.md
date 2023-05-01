@@ -63,47 +63,60 @@ array:1 [
 ## 🧑 Profile actions
 
 ```PHP
-static array getProfile(string $username)  
+getProfile(string $username): array;  
 
-static array getProfileShort(string $username)  
+getProfileShort(string $username): array;  
 
-static array getProfileActions(string $username)  
+getProfileActions(string $username): array;  
 
-static array getProfileEntriesAdded(string $username)  
+getProfileEntriesAdded(string $username): array;  
 
-static array getProfileEntriesVoted(string $username)  
+getProfileEntriesVoted(string $username): array;  
 
-static array getProfileEntriesCommented(string $username)  
+getProfileEntriesCommented(string $username): array;  
 
-static array getProfileLinksAdded(string $username)  
+getProfileLinksAdded(string $username): array;  
 
-static array getProfileLinksPublished(string $username)  
+getProfileLinksPublished(string $username): array;  
 
-static array getProfileLinksUp(string $username)  
+getProfileLinksUp(string $username): array;  
 
-static array getProfileLinksDown(string $username)  
+getProfileLinksDown(string $username): array;  
 
-static array getProfileLinksCommented(string $username)
+getProfileLinksCommented(string $username): array;
 ```
 
 ## 🔗 Link actions
 
 ```PHP
-static array getLinkList(int $page = 1, int $limit = 25, ?Sort $sort = null, ?LinkType $type = null, ?string $category = null, ?string $bucket = null) 
+getLinkList(
+    int $page = 1,
+    int $limit = 25,
+    ?LinkSort $sort = null,
+    ?LinkType $type = null,
+    ?string $category = null,
+    ?string $bucket = null
+): array; 
 
-static array getLinkUrl(string $url) 
+getLinkUrl(string $url): array; 
 
-static array getLink(int $linkId) 
+getLink(int $linkId): array; 
 
-static array getLinkUpVotes(int $linkId, ActionType $type) 
+getLinkUpVotes(int $linkId, ActionType $type): array; 
 
-static array getLinkRedirect(int $linkId)
+getLinkRedirect(int $linkId): array;
 
-static array getLinkCommentList(int $linkId, int $page = 1, int $limit = 25, ?CommentSort $sort = null, bool $ama = false)
+getLinkCommentList(
+    int $linkId,
+    int $page = 1,
+    int $limit = 25,
+    ?CommentSort $sort = null,
+    bool $ama = false
+): array;
 
-static array getLinkComment(int $linkId, int $commentId)
+getLinkComment(int $linkId, int $commentId): array;
 
-static array getLinkCommentComments(int $linkId, int $commentId, int $page = 1)
+getLinkCommentComments(int $linkId, int $commentId, int $page = 1): array;
 ```
 
 # 🚧 Available Enums
