@@ -2,6 +2,9 @@
 
 namespace FakeCop\WykopClient\Facades;
 
+use FakeCop\WykopClient\Api\Requests\Contracts\ActionType;
+use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
+use FakeCop\WykopClient\Api\Requests\Contracts\Sort;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -16,6 +19,11 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getProfileLinksUp(string $username)
  * @method static array getProfileLinksDown(string $username)
  * @method static array getProfileLinksCommented(string $username)
+ * @method static array getLinkList(int $page = 1, int $limit = 25, ?Sort $sort = null, ?LinkType $type = null, ?string $category = null, ?string $bucket = null)
+ * @method static array getLinkUrl(string $url)
+ * @method static array getLink(int $linkId)
+ * @method static array getLinkUpVotes(int $linkId, ActionType $type)
+ * @method static array getLinkRedirect(int $linkId)
  */
 class WykopClient extends Facade
 {

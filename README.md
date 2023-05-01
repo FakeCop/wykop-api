@@ -60,7 +60,7 @@ array:1 [
 
 # 📜 Available actions
 
-## Profile actions
+## 🧑 Profile actions
 
 ```PHP
 static array getProfile(string $username)  
@@ -84,5 +84,50 @@ static array getProfileLinksUp(string $username)
 static array getProfileLinksDown(string $username)  
 
 static array getProfileLinksCommented(string $username)
+```
+
+## 🔗 Link actions
+
+```PHP
+ static array getLinkList(int $page = 1, int $limit = 25, ?Sort $sort = null, ?LinkType $type = null, ?string $category = null, ?string $bucket = null) 
+
+ static array getLinkUrl(string $url) 
+
+ static array getLink(int $linkId) 
+
+ static array getLinkUpVotes(int $linkId, ActionType $type) 
+
+ static array getLinkRedirect(int $linkId)
+```
+
+# 🚧 Available Enums
+
+## Sort
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\Sort;
+
+Sort::NEWEST;		    //	'newest'
+Sort::ACTIVE;		    //	'active'
+Sort::COMMENTED;	    //	'commented'
+Sort::DIGGED;		    //	'digged'
+```
+
+## LinkType
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
+
+LinkType::HOMEPAGE;		//  'homepage'
+LinkType::UPCOMING;		//  'upcoming'
+```
+
+## ActionType
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\ActionType;
+
+ActionType::UP;         //  'up'
+ActionType::DOWN;       //  'down'
 ```
 

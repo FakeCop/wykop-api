@@ -4,6 +4,14 @@ namespace FakeCop\WykopClient;
 
 use Exception;
 use FakeCop\WykopClient\Api\Requests\AuthRequest;
+use FakeCop\WykopClient\Api\Requests\Contracts\ActionType;
+use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
+use FakeCop\WykopClient\Api\Requests\Contracts\Sort;
+use FakeCop\WykopClient\Api\Requests\Link\LinkListRequest;
+use FakeCop\WykopClient\Api\Requests\Link\LinkRedirectRequest;
+use FakeCop\WykopClient\Api\Requests\Link\LinkRequest;
+use FakeCop\WykopClient\Api\Requests\Link\LinkUpVotesRequest;
+use FakeCop\WykopClient\Api\Requests\Link\LinkUrlRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileActionsRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileEntriesAddedRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileEntriesCommentedRequest;
@@ -199,5 +207,63 @@ class WykopClient
     public function getProfileLinksCommented(string $username): array
     {
         return $this->sendConnectorAction(new ProfileLinksCommentedRequest($username));
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\Sort|null $sort
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\LinkType|null $type
+     * @param string|null $category
+     * @param string|null $bucket
+     * @return array
+     */
+    public function getLinkList(
+        int $page = 1,
+        int $limit = 25,
+        ?Sort $sort = null,
+        ?LinkType $type = null,
+        ?string $category = null,
+        ?string $bucket = null
+    ): array
+    {
+        return $this->sendConnectorAction(new LinkListRequest($page, $limit, $sort, $type, $category, $bucket));
+    }
+
+    /**
+     * @param string $url
+     * @return array
+     */
+    public function getLinkUrl(string $url): array
+    {
+        return $this->sendConnectorAction(new LinkUrlRequest($url));
+    }
+
+    /**
+     * @param int $linkId
+     * @return array
+     */
+    public function getLink(int $linkId): array
+    {
+        return $this->sendConnectorAction(new LinkRequest($linkId));
+    }
+
+    /**
+     * @param int $linkId
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\ActionType $type
+     * @return array
+     */
+    public function getLinkUpVotes(int $linkId, ActionType $type): array
+    {
+        return $this->sendConnectorAction(new LinkUpVotesRequest($linkId, $type));
+    }
+
+    /**
+     * @param int $linkId
+     * @return array
+     */
+    public function getLinkRedirect(int $linkId): array
+    {
+        return $this->sendConnectorAction(new LinkRedirectRequest($linkId));
     }
 }
