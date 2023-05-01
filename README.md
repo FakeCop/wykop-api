@@ -128,7 +128,7 @@ use FakeCop\WykopClient\Api\Requests\Contracts\LinkSort;
 
 LinkSort::NEWEST;		    //	'newest'
 LinkSort::ACTIVE;		    //	'active'
-LinkSort::COMMENTED;	    //	'commented'
+LinkSort::COMMENTED;        //  'commented'
 LinkSort::DIGGED;		    //	'digged'
 ```
 
@@ -138,8 +138,8 @@ LinkSort::DIGGED;		    //	'digged'
 use FakeCop\WykopClient\Api\Requests\Contracts\CommentSort;
 
 CommentSort::NEWEST;		//  'newest'
-CommentSort::OLDEST;		//	'oldest'
-CommentSort::BEST;	        //	'best'
+CommentSort::OLDEST;		//  'oldest'
+CommentSort::BEST;	        //  'best'
 ```
 
 ## LinkType
