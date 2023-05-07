@@ -119,6 +119,68 @@ getLinkComment(int $linkId, int $commentId): array;
 getLinkCommentComments(int $linkId, int $commentId, int $page = 1): array;
 ```
 
+## 🔥 Hit actions
+
+```PHP
+getHitLinks(int $year, int $month, HitSort $sort = HitSort::ALL): array;  
+
+getHitEntries(int $year, int $month, HitSort $sort = HitSort::ALL): array;
+```
+
+## 🔍 Search actions
+
+```PHP
+getSearchAll(
+    string $query,
+    ?Carbon $dateFrom = null,
+    ?Carbon $dateTo = null,
+    SearchSort $sort = SearchSort::SCORE,
+    SearchVote $votes = SearchVote::HUNDRED,
+    array $domains = [],
+    array $users = [],
+    array $tags = [],
+    ?string $category = null,
+    ?string $bucket = null
+): array;
+
+getSearchLinks(
+    string $query,
+    ?Carbon $dateFrom = null,
+    ?Carbon $dateTo = null,
+    SearchSort $sort = SearchSort::SCORE,
+    SearchVote $votes = SearchVote::HUNDRED,
+    array $domains = [],
+    array $users = [],
+    array $tags = [],
+    ?string $category = null,
+    ?string $bucket = null,
+    int $page = 1,
+    int $limit = 25
+): array;
+
+getSearchEntries(
+    string $query,
+    ?Carbon $dateFrom = null,
+    ?Carbon $dateTo = null,
+    SearchSort $sort = SearchSort::SCORE,
+    SearchVote $votes = SearchVote::HUNDRED,
+    array $domains = [],
+    array $users = [],
+    array $tags = [],
+    ?string $category = null,
+    ?string $bucket = null,
+    int $page = 1,
+    int $limit = 25
+): array;
+
+getSearchUsers(
+    string $query,
+    SearchUsersSort $sort = SearchUsersSort::SCORE,
+    array $users = [],
+    int $page = 1
+): array;
+```
+
 # 🚧 Available Enums
 
 ## LinkSort
@@ -132,6 +194,15 @@ LinkSort::COMMENTED;        //  'commented'
 LinkSort::DIGGED;		    //	'digged'
 ```
 
+## LinkType
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
+
+LinkType::HOMEPAGE;		//  'homepage'
+LinkType::UPCOMING;		//  'upcoming'
+```
+
 ## CommentSort
 
 ```PHP
@@ -140,15 +211,6 @@ use FakeCop\WykopClient\Api\Requests\Contracts\CommentSort;
 CommentSort::NEWEST;		//  'newest'
 CommentSort::OLDEST;		//  'oldest'
 CommentSort::BEST;	        //  'best'
-```
-
-## LinkType
-
-```PHP
-use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
-
-LinkType::HOMEPAGE;		//  'homepage'
-LinkType::UPCOMING;		//  'upcoming'
 ```
 
 ## ActionType
@@ -160,3 +222,45 @@ ActionType::UP;         //  'up'
 ActionType::DOWN;       //  'down'
 ```
 
+## HitSort
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\HitSort;
+
+HitSort::ALL;		//	'all'
+HitSort::DAY;		//	'day'
+HitSort::WEEK;		//	'week'
+HitSort::MONTH;		//	'month'
+HitSort::YEAR;		//	'year'
+```
+
+## SearchSort
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\SearchSort;
+
+SearchSort::SCORE;      //  'score'
+SearchSort::POPULAR;    //  'popular'
+SearchSort::COMMENTS;   //  'comments'
+SearchSort::NEWEST;     //  'newest'
+```
+
+## SearchVote
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\SearchVote;
+
+SearchVote::FIFTY           //  50
+SearchVote::HUNDRED         //  100
+SearchVote::FIVE_HUNDRED    //  500
+SearchVote::THOUSAND;       //  1000
+```
+
+## SearchUsersSort
+
+```PHP
+use FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort;
+
+SearchUsersSort::SCORE          //  'score'
+SearchUsersSort::NEWEST         //  'newest'
+```

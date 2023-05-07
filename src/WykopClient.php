@@ -6,8 +6,14 @@ use Exception;
 use FakeCop\WykopClient\Api\Requests\AuthRequest;
 use FakeCop\WykopClient\Api\Requests\Contracts\ActionType;
 use FakeCop\WykopClient\Api\Requests\Contracts\CommentSort;
+use FakeCop\WykopClient\Api\Requests\Contracts\HitSort;
 use FakeCop\WykopClient\Api\Requests\Contracts\LinkType;
 use FakeCop\WykopClient\Api\Requests\Contracts\LinkSort;
+use FakeCop\WykopClient\Api\Requests\Contracts\SearchSort;
+use FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort;
+use FakeCop\WykopClient\Api\Requests\Contracts\SearchVote;
+use FakeCop\WykopClient\Api\Requests\Hit\HitEntriesRequest;
+use FakeCop\WykopClient\Api\Requests\Hit\HitLinksRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkCommentCommentsRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkCommentListRequest;
 use FakeCop\WykopClient\Api\Requests\Link\LinkCommentRequest;
@@ -28,6 +34,11 @@ use FakeCop\WykopClient\Api\Requests\Profile\ProfileLinksPublishedRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileLinksUpRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileRequest;
 use FakeCop\WykopClient\Api\Requests\Profile\ProfileShortRequest;
+use FakeCop\WykopClient\Api\Requests\Search\SearchAllRequest;
+use FakeCop\WykopClient\Api\Requests\Search\SearchEntriesRequest;
+use FakeCop\WykopClient\Api\Requests\Search\SearchLinksRequest;
+use FakeCop\WykopClient\Api\Requests\Search\SearchUsersRequest;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 use Saloon\Exceptions\Request\FatalRequestException;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;
@@ -42,7 +53,7 @@ use Saloon\Http\Request;
 class WykopClient
 {
     private static Connector $connector;
-    
+
     public function __construct()
     {
         $this->initConnector();
@@ -50,7 +61,7 @@ class WykopClient
 
     private function initConnector(): void
     {
-        if (!Session::has('wykopAccessToken')) {
+        if (! Session::has('wykopAccessToken')) {
             $this->refreshAccessToken();
         }
 
@@ -64,14 +75,13 @@ class WykopClient
             'data' => [
                 'key' => config('wykop-client.key'),
                 'secret' => config('wykop-client.secret'),
-            ]
+            ],
         ]);
 
         try {
             $jsonBody = $request->send()->json();
             Session::put('wykopAccessToken', $jsonBody['data']['token']);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             // @TODO
         }
     }
@@ -86,29 +96,20 @@ class WykopClient
             $response = self::$connector->send($request);
 
             return $response->json();
-        }
-        catch (UnauthorizedException $exception) { // 401
+        } catch (UnauthorizedException $exception) { // 401
 
-        }
-        catch (ForbiddenException $exception) { // 403
+        } catch (ForbiddenException $exception) { // 403
             // @TODO reauthenticate
-        }
-        catch (NotFoundException $exception) { // 404
+        } catch (NotFoundException $exception) { // 404
 
-        }
-        catch (RequestTimeOutException $exception) { // 408
+        } catch (RequestTimeOutException $exception) { // 408
 
-        }
-        catch (UnprocessableEntityException $exception) { // 422
+        } catch (UnprocessableEntityException $exception) { // 422
 
-        }
-        catch (TooManyRequestsException $exception) { // 429
+        } catch (TooManyRequestsException $exception) { // 429
 
-        }
-        catch (FatalRequestException $exception) {
-
-        }
-        catch (Exception $exception) {
+        } catch (FatalRequestException $exception) {
+        } catch (Exception $exception) {
             return [];
         }
 
@@ -230,8 +231,7 @@ class WykopClient
         ?LinkType $type = null,
         ?string $category = null,
         ?string $bucket = null
-    ): array
-    {
+    ): array {
         return $this->sendConnectorAction(new LinkListRequest($page, $limit, $sort, $type, $category, $bucket));
     }
 
@@ -295,8 +295,7 @@ class WykopClient
         int $limit = 25,
         ?CommentSort $sort = null,
         bool $ama = false,
-    ): array
-    {
+    ): array {
         return $this->sendConnectorAction(new LinkCommentListRequest($linkId, $page, $limit, $sort, $ama));
     }
 
@@ -319,5 +318,136 @@ class WykopClient
     public function getLinkCommentComments(int $linkId, int $commentId, int $page = 1): array
     {
         return $this->sendConnectorAction(new LinkCommentCommentsRequest($linkId, $commentId, $page));
+    }
+
+    /**
+     * @param int $year
+     * @param int $month
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\HitSort $sort
+     * @return array
+     */
+    public function getHitLinks(int $year, int $month, HitSort $sort = HitSort::ALL): array
+    {
+        return $this->sendConnectorAction(new HitLinksRequest($year, $month, $sort));
+    }
+
+    /**
+     * @param int $year
+     * @param int $month
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\HitSort $sort
+     * @return array
+     */
+    public function getHitEntries(int $year, int $month, HitSort $sort = HitSort::ALL): array
+    {
+        return $this->sendConnectorAction(new HitEntriesRequest($year, $month, $sort));
+    }
+
+    /**
+     * @param string $query
+     * @param \Illuminate\Support\Carbon|null $dateFrom
+     * @param \Illuminate\Support\Carbon|null $dateTo
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchVote $votes
+     * @param array $domains
+     * @param array $users
+     * @param array $tags
+     * @param string|null $category
+     * @param string|null $bucket
+     * @return array
+     */
+    public function getSearchAll(
+        string $query,
+        ?Carbon $dateFrom = null,
+        ?Carbon $dateTo = null,
+        SearchSort $sort = SearchSort::SCORE,
+        SearchVote $votes = SearchVote::HUNDRED,
+        array $domains = [],
+        array $users = [],
+        array $tags = [],
+        ?string $category = null,
+        ?string $bucket = null,
+    ): array {
+        return $this->sendConnectorAction(new SearchAllRequest($query, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket));
+    }
+
+    /**
+     * @param string $query
+     * @param \Illuminate\Support\Carbon|null $dateFrom
+     * @param \Illuminate\Support\Carbon|null $dateTo
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchVote $votes
+     * @param array $domains
+     * @param array $users
+     * @param array $tags
+     * @param string|null $category
+     * @param string|null $bucket
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
+    public function getSearchLinks(
+        string $query,
+        ?Carbon $dateFrom = null,
+        ?Carbon $dateTo = null,
+        SearchSort $sort = SearchSort::SCORE,
+        SearchVote $votes = SearchVote::HUNDRED,
+        array $domains = [],
+        array $users = [],
+        array $tags = [],
+        ?string $category = null,
+        ?string $bucket = null,
+        int $page = 1,
+        int $limit = 25,
+    ): array {
+        return $this->sendConnectorAction(new SearchLinksRequest($query, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket, $page, $limit));
+    }
+
+    /**
+     * @param string $query
+     * @param \Illuminate\Support\Carbon|null $dateFrom
+     * @param \Illuminate\Support\Carbon|null $dateTo
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchVote $votes
+     * @param array $domains
+     * @param array $users
+     * @param array $tags
+     * @param string|null $category
+     * @param string|null $bucket
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
+    public function getSearchEntries(
+        string $query,
+        ?Carbon $dateFrom = null,
+        ?Carbon $dateTo = null,
+        SearchSort $sort = SearchSort::SCORE,
+        SearchVote $votes = SearchVote::HUNDRED,
+        array $domains = [],
+        array $users = [],
+        array $tags = [],
+        ?string $category = null,
+        ?string $bucket = null,
+        int $page = 1,
+        int $limit = 25,
+    ): array
+    {
+        return $this->sendConnectorAction(new SearchEntriesRequest($query, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket, $page, $limit));
+    }
+
+    /**
+     * @param string $query
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort $sort
+     * @param array $users
+     * @param int $page
+     * @return array
+     */
+    public function getSearchUsers(
+        string $query,
+        SearchUsersSort $sort = SearchUsersSort::SCORE,
+        array $users = [],
+        int $page = 1,
+    ): array {
+        return $this->sendConnectorAction(new SearchUsersRequest($query, $sort, $users, $page));
     }
 }
