@@ -5,7 +5,6 @@ namespace FakeCop\WykopClient\Api\Requests\Search;
 use FakeCop\WykopClient\Api\Requests\Contracts\SearchSort;
 use FakeCop\WykopClient\Api\Requests\Contracts\SearchVote;
 use Illuminate\Support\Carbon;
-use phpDocumentor\Reflection\Types\Integer;
 
 class SearchEntriesRequest extends SearchBasedRequest
 {

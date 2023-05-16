@@ -45,8 +45,8 @@ class LinkListRequest extends LinkBasedRequest
         return [
             'page' => $this->page,
             'limit' => $this->limit,
-            'sort' => $this->sort,
-            'type' => $this->type,
+            'sort' => $this->sort->value ?? null,
+            'type' => $this->type->value ?? null,
             'category' => $this->category,
             'bucket' => $this->bucket,
         ];

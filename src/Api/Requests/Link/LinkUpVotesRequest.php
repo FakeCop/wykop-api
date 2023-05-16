@@ -17,6 +17,6 @@ class LinkUpVotesRequest extends LinkBasedRequest
 
     public function resolveEndpoint(): string
     {
-        return "{$this->urlLinkPrefix}/{$this->linkId}/upvotes/{$this->type}";
+        return "{$this->urlLinkPrefix}/{$this->linkId}/upvotes/{$this->type->value}";
     }
 }

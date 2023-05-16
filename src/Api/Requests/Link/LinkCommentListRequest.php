@@ -40,7 +40,7 @@ class LinkCommentListRequest extends LinkBasedRequest
         return [
             'page' => $this->page,
             'limit' => $this->limit,
-            'sort' => $this->sort,
+            'sort' => $this->sort->value ?? null,
             'ama' => $this->ama
         ];
     }
