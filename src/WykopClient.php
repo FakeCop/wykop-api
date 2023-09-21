@@ -343,7 +343,7 @@ class WykopClient
     }
 
     /**
-     * @param string $query
+     * @param string $queryParam
      * @param \Illuminate\Support\Carbon|null $dateFrom
      * @param \Illuminate\Support\Carbon|null $dateTo
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
@@ -356,7 +356,7 @@ class WykopClient
      * @return array
      */
     public function getSearchAll(
-        string $query,
+        string $queryParam,
         ?Carbon $dateFrom = null,
         ?Carbon $dateTo = null,
         SearchSort $sort = SearchSort::SCORE,
@@ -367,13 +367,13 @@ class WykopClient
         ?string $category = null,
         ?string $bucket = null,
     ): array {
-        return $this->sendConnectorAction(new SearchAllRequest($query, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket));
+        return $this->sendConnectorAction(new SearchAllRequest($queryParam, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket));
     }
 
     /**
-     * @param string $query
-     * @param \Illuminate\Support\Carbon|null $dateFrom
-     * @param \Illuminate\Support\Carbon|null $dateTo
+     * @param string $queryParam
+     * @param \Illuminate\Support\Carbon $dateFrom
+     * @param \Illuminate\Support\Carbon $dateTo
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchVote $votes
      * @param array $domains
@@ -386,9 +386,9 @@ class WykopClient
      * @return array
      */
     public function getSearchLinks(
-        string $query,
-        ?Carbon $dateFrom = null,
-        ?Carbon $dateTo = null,
+        string $queryParam,
+        Carbon $dateFrom,
+        Carbon $dateTo,
         SearchSort $sort = SearchSort::SCORE,
         SearchVote $votes = SearchVote::HUNDRED,
         array $domains = [],
@@ -399,13 +399,13 @@ class WykopClient
         int $page = 1,
         int $limit = 25,
     ): array {
-        return $this->sendConnectorAction(new SearchLinksRequest($query, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket, $page, $limit));
+        return $this->sendConnectorAction(new SearchLinksRequest($queryParam, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket, $page, $limit));
     }
 
     /**
-     * @param string $query
-     * @param \Illuminate\Support\Carbon|null $dateFrom
-     * @param \Illuminate\Support\Carbon|null $dateTo
+     * @param string $queryParam
+     * @param \Illuminate\Support\Carbon $dateFrom
+     * @param \Illuminate\Support\Carbon $dateTo
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchVote $votes
      * @param array $domains
@@ -418,9 +418,9 @@ class WykopClient
      * @return array
      */
     public function getSearchEntries(
-        string $query,
-        ?Carbon $dateFrom = null,
-        ?Carbon $dateTo = null,
+        string $queryParam,
+        Carbon $dateFrom,
+        Carbon $dateTo,
         SearchSort $sort = SearchSort::SCORE,
         SearchVote $votes = SearchVote::HUNDRED,
         array $domains = [],
@@ -432,22 +432,22 @@ class WykopClient
         int $limit = 25,
     ): array
     {
-        return $this->sendConnectorAction(new SearchEntriesRequest($query, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket, $page, $limit));
+        return $this->sendConnectorAction(new SearchEntriesRequest($queryParam, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket, $page, $limit));
     }
 
     /**
-     * @param string $query
+     * @param string $queryParam
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort $sort
      * @param array $users
      * @param int $page
      * @return array
      */
     public function getSearchUsers(
-        string $query,
+        string $queryParam,
         SearchUsersSort $sort = SearchUsersSort::SCORE,
         array $users = [],
         int $page = 1,
     ): array {
-        return $this->sendConnectorAction(new SearchUsersRequest($query, $sort, $users, $page));
+        return $this->sendConnectorAction(new SearchUsersRequest($queryParam, $sort, $users, $page));
     }
 }
