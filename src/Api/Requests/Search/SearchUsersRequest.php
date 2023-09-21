@@ -7,13 +7,13 @@ use FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort;
 class SearchUsersRequest extends SearchBasedRequest
 {
     public function __construct(
-        public string $query,
+        public string $queryParam,
         public SearchUsersSort $usersSort = SearchUsersSort::SCORE,
         public array $users = [],
         public int $page = 1,
     ) {
         parent::__construct(
-            query: $query,
+            queryParam: $queryParam,
             users: $users,
         );
     }

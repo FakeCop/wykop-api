@@ -15,7 +15,7 @@ abstract class SearchBasedRequest extends ClientBasedRequest
     protected string $urlSearchPrefix = '/search';
 
     public function __construct(
-        public string $query,
+        public string $queryParam,
         public ?Carbon $dateFrom = null,
         public ?Carbon $dateTo = null,
         public SearchSort $sort = SearchSort::SCORE,
@@ -30,7 +30,7 @@ abstract class SearchBasedRequest extends ClientBasedRequest
     protected function defaultQuery(): array
     {
         return [
-            'query' => $this->query,
+            'query' => $this->queryParam,
             'sort' => $this->sort->value,
             'votes' => $this->votes->value,
             'date_from' => $this->dateFrom->format('Y-m-d H:i:s') ?? null,

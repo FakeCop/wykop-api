@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 class SearchLinksRequest extends SearchBasedRequest
 {
     public function __construct(
-        public string $query,
+        public string $queryParam,
         public Carbon $dateFrom,
         public Carbon $dateTo,
         public SearchSort $sort = SearchSort::SCORE,
@@ -22,7 +22,7 @@ class SearchLinksRequest extends SearchBasedRequest
         public int $page = 1,
         public int $limit = 25,
     ) {
-        parent::__construct($query, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket,);
+        parent::__construct($this->queryParam, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket,);
     }
 
     public function resolveEndpoint(): string
