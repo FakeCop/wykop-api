@@ -38,7 +38,7 @@ use FakeCop\WykopClient\Api\Requests\Search\SearchAllRequest;
 use FakeCop\WykopClient\Api\Requests\Search\SearchEntriesRequest;
 use FakeCop\WykopClient\Api\Requests\Search\SearchLinksRequest;
 use FakeCop\WykopClient\Api\Requests\Search\SearchUsersRequest;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Saloon\Exceptions\Request\FatalRequestException;
 use Saloon\Exceptions\Request\Statuses\ForbiddenException;

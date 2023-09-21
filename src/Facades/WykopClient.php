@@ -10,7 +10,7 @@ use FakeCop\WykopClient\Api\Requests\Contracts\LinkSort;
 use FakeCop\WykopClient\Api\Requests\Contracts\SearchSort;
 use FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort;
 use FakeCop\WykopClient\Api\Requests\Contracts\SearchVote;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -36,10 +36,10 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getLinkCommentComments(int $linkId, int $commentId, int $page = 1)
  * @method static array getHitLinks(int $year, int $month, HitSort $sort = HitSort::ALL)
  * @method static array getHitEntries(int $year, int $month, HitSort $sort = HitSort::ALL)
- * @method static array getSearchAll(string $query, ?Carbon $dateFrom = null, ?Carbon $dateTo = null, SearchSort $sort = SearchSort::SCORE, SearchVote $votes = SearchVote::HUNDRED, array $domains = [], array $users = [], array $tags = [], ?string $category = null, ?string $bucket = null)
- * @method static array getSearchLinks(string $query, ?Carbon $dateFrom = null, ?Carbon $dateTo = null, SearchSort $sort = SearchSort::SCORE, SearchVote $votes = SearchVote::HUNDRED, array $domains = [], array $users = [], array $tags = [], ?string $category = null, ?string $bucket = null, int $page = 1, int $limit = 25)
- * @method static array getSearchEntries(string $query, ?Carbon $dateFrom = null, ?Carbon $dateTo = null, SearchSort $sort = SearchSort::SCORE, SearchVote $votes = SearchVote::HUNDRED, array $domains = [], array $users = [], array $tags = [], ?string $category = null, ?string $bucket = null, int $page = 1, int $limit = 25)
- * @method static array getSearchUsers(string $query, SearchUsersSort $sort = SearchUsersSort::SCORE, array $users = [], int $page = 1)
+ * @method static array getSearchAll(string $queryParam, ?Carbon $dateFrom = null, ?Carbon $dateTo = null, SearchSort $sort = SearchSort::SCORE, SearchVote $votes = SearchVote::HUNDRED, array $domains = [], array $users = [], array $tags = [], ?string $category = null, ?string $bucket = null)
+ * @method static array getSearchLinks(string $queryParam, Carbon $dateFrom, Carbon $dateTo, SearchSort $sort = SearchSort::SCORE, SearchVote $votes = SearchVote::HUNDRED, array $domains = [], array $users = [], array $tags = [], ?string $category = null, ?string $bucket = null, int $page = 1, int $limit = 25)
+ * @method static array getSearchEntries(string $queryParam, Carbon $dateFrom, Carbon $dateTo, SearchSort $sort = SearchSort::SCORE, SearchVote $votes = SearchVote::HUNDRED, array $domains = [], array $users = [], array $tags = [], ?string $category = null, ?string $bucket = null, int $page = 1, int $limit = 25)
+ * @method static array getSearchUsers(string $queryParam, SearchUsersSort $sort = SearchUsersSort::SCORE, array $users = [], int $page = 1)
  */
 class WykopClient extends Facade
 {
