@@ -10,8 +10,8 @@ class SearchLinksRequest extends SearchBasedRequest
 {
     /**
      * @param string $queryParam
-     * @param \Carbon\Carbon $dateFrom
-     * @param \Carbon\Carbon $dateTo
+     * @param ?Carbon $dateFrom
+     * @param ?Carbon $dateTo
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
      * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchVote $votes
      * @param array $domains
@@ -24,8 +24,8 @@ class SearchLinksRequest extends SearchBasedRequest
      */
     public function __construct(
         public string $queryParam,
-        public Carbon $dateFrom,
-        public Carbon $dateTo,
+        public ?Carbon $dateFrom,
+        public ?Carbon $dateTo,
         public SearchSort $sort = SearchSort::SCORE,
         public SearchVote $votes = SearchVote::HUNDRED,
         public array $domains = [],
@@ -36,7 +36,7 @@ class SearchLinksRequest extends SearchBasedRequest
         public int $page = 1,
         public int $limit = 25,
     ) {
-        parent::__construct($this->queryParam, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket,);
+        parent::__construct($this->queryParam, $dateFrom, $dateTo, $sort, $votes, $domains, $users, $tags, $category, $bucket);
     }
 
     public function resolveEndpoint(): string

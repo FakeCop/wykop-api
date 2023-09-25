@@ -6,6 +6,12 @@ use FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort;
 
 class SearchUsersRequest extends SearchBasedRequest
 {
+    /**
+     * @param string $queryParam
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchUsersSort $usersSort
+     * @param array $users
+     * @param int $page
+     */
     public function __construct(
         public string $queryParam,
         public SearchUsersSort $usersSort = SearchUsersSort::SCORE,

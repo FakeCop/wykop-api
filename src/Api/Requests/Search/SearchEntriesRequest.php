@@ -8,10 +8,24 @@ use Carbon\Carbon;
 
 class SearchEntriesRequest extends SearchBasedRequest
 {
+    /**
+     * @param string $queryParam
+     * @param \Carbon\Carbon|null $dateFrom
+     * @param \Carbon\Carbon|null $dateTo
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchSort $sort
+     * @param \FakeCop\WykopClient\Api\Requests\Contracts\SearchVote $votes
+     * @param array $domains
+     * @param array $users
+     * @param array $tags
+     * @param string|null $category
+     * @param string|null $bucket
+     * @param int $page
+     * @param int $limit
+     */
     public function __construct(
         public string $queryParam,
-        public Carbon $dateFrom,
-        public Carbon $dateTo,
+        public ?Carbon $dateFrom,
+        public ?Carbon $dateTo,
         public SearchSort $sort = SearchSort::SCORE,
         public SearchVote $votes = SearchVote::HUNDRED,
         public array $domains = [],
